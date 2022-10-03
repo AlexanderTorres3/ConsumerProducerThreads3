@@ -1,0 +1,2 @@
+module ASg3SharedArray {
+}
