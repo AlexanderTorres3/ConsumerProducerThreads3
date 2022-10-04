@@ -32,9 +32,7 @@ public class CircularArray {
             }
 
             array[(tail%size)] = value;
-            if (!this.isEmpty()) {
-                tail += 1;
-            }
+            tail += 1;
             this.notifyAll();
             count += 1;
             return true;

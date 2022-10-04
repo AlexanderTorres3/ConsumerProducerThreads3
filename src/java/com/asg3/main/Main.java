@@ -16,33 +16,23 @@ import com.asg3.circularBuffer.*;
  */
 public class Main {
     private static CircularArray array = new CircularArray(5);
-    private static Thread producer;
-    private static Thread consumer;
 
     public static void main(String[] args) {
-        producer = new Thread(()->{
-            producerRunWork();
-        });
 
-        consumer = new Thread(()->{
-
-            consumerRunWork();
-        });
         //start producer and consumer  threads
-        consumer.start();
-        producer.start();
-
+        new Thread(Main::producerRunWork).start();
+        new Thread(Main::consumerRunWork).start();
     }
 
     private static void producerRunWork(){
+        Random rand = new Random();
         for (int i = 0; i <= 100; i++) {
-            Random rand = new Random();
+            try {
+                Thread.sleep(rand.nextInt(3000) + 1000);
+            } catch (InterruptedException x1) {
+                x1.printStackTrace();
+            }
             synchronized(array) {
-                try {
-                    Thread.sleep(rand.nextInt(3000) + 1000);
-                } catch (InterruptedException x1) {
-                    x1.printStackTrace();
-                }
 
                 while (array.isFull()) {
                     System.out.println("producer waiting");
@@ -71,7 +61,7 @@ public class Main {
             Random rand = new Random();
             while (true) {
                 try {
-                    Thread.sleep(rand.nextInt(2000)+1000);
+                    Thread.sleep(rand.nextInt(3000) + 1000);
                 } catch (InterruptedException x1) {
                     x1.printStackTrace();
                 }
@@ -87,7 +77,7 @@ public class Main {
                     }
 
                     int value = array.pop();
-                    System.out.println("value " + value+ " removed");
+                    System.out.println("value " + value + " removed");
                     if (value == -1) {
                         output.println("consumer done");
                         output.close();
